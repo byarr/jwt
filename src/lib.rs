@@ -1,11 +1,11 @@
-use std::error::Error;
-use data_encoding::{BASE64URL_NOPAD};
+use data_encoding::BASE64URL_NOPAD;
 use serde_json::Value;
+use std::error::Error;
 use std::fmt::{Display, Formatter};
 
 #[derive(Debug)]
 enum JwtDecodeError {
-    BadFormat
+    BadFormat,
 }
 
 #[derive(Debug)]
@@ -21,10 +21,9 @@ impl Display for JwtDecodeError {
     }
 }
 
-impl Error for JwtDecodeError{}
+impl Error for JwtDecodeError {}
 
-pub fn decode_jwt(input: &str) -> Result<(), Box<dyn Error>>{
-
+pub fn decode_jwt(input: &str) -> Result<(), Box<dyn Error>> {
     // see https://datatracker.ietf.org/doc/html/rfc7519#section-7.2
     let parts: Vec<_> = input.split('.').collect();
     if parts.len() < 2 {
@@ -43,7 +42,12 @@ pub fn decode_jwt(input: &str) -> Result<(), Box<dyn Error>>{
     //         supported or that are specified as being ignored when not
     //         understood.
 
-    let token_type = if header_obj.is_object() && header_obj.as_object().map(|o| o.contains_key("enc")).unwrap_or(false) {
+    let token_type = if header_obj.is_object()
+        && header_obj
+            .as_object()
+            .map(|o| o.contains_key("enc"))
+            .unwrap_or(false)
+    {
         JwtType::JWE
     } else {
         JwtType::JWS
