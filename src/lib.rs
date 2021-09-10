@@ -1,6 +1,5 @@
 use std::error::Error;
-use std::string::ParseError;
-use data_encoding::{BASE64URL, BASE64URL_NOPAD};
+use data_encoding::{BASE64URL_NOPAD};
 use serde_json::Value;
 use std::fmt::{Display, Formatter};
 
@@ -10,6 +9,7 @@ enum JwtDecodeError {
 }
 
 #[derive(Debug)]
+#[allow(clippy::upper_case_acronyms)]
 enum JwtType {
     JWS,
     JWE,
@@ -26,7 +26,7 @@ impl Error for JwtDecodeError{}
 pub fn decode_jwt(input: &str) -> Result<(), Box<dyn Error>>{
 
     // see https://datatracker.ietf.org/doc/html/rfc7519#section-7.2
-    let parts: Vec<_> = input.split(".").collect();
+    let parts: Vec<_> = input.split('.').collect();
     if parts.len() < 2 {
         // 1.
         return Err(JwtDecodeError::BadFormat.into());
